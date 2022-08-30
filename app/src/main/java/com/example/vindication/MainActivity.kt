@@ -1,9 +1,14 @@
 package com.example.vindication
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.DataSnapshot
@@ -25,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 //    val appOwner: String = "Pankaj Kumar Roy"
     val appOwner: String = "ktress"
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -42,6 +48,16 @@ class MainActivity : AppCompatActivity() {
         getTopLevelItems()
 //        Log.i("TAG", "onCreate: $itemList")
         recyclerView.adapter = mAdapter
+
+        val connectivityManager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        connectivityManager?.let {
+            it.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
+                override fun onAvailable(network: Network) {
+                    //take action when network connection is gained
+                    getTopLevelItems()
+                }
+            })
+        }
 
     }
 
