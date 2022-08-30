@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "216782229158",
+    "project_id": "vindication-b5dee",
+    "storage_bucket": "vindication-b5dee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:216782229158:android:258ab0daf56b22d7bfee67",
+        "android_client_info": {
+          "package_name": "com.example.vindication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "216782229158-0q549pe9aio88f2kkridreef1j70a024.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpG0dyhXSto-TqYAcOuM0Mq8dkBz4dIo0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "216782229158-0q549pe9aio88f2kkridreef1j70a024.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
