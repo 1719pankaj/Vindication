@@ -1,15 +1,16 @@
 package com.example.vindication
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.Network
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.webkit.WebChromeClient
+import android.webkit.WebSettings
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -18,9 +19,8 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.add_item_dialog.*
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -49,15 +49,15 @@ class MainActivity : AppCompatActivity() {
 //        Log.i("TAG", "onCreate: $itemList")
         recyclerView.adapter = mAdapter
 
-        val connectivityManager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        connectivityManager?.let {
-            it.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
-                override fun onAvailable(network: Network) {
-                    //take action when network connection is gained
-                    getTopLevelItems()
-                }
-            })
-        }
+//        val connectivityManager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+//        connectivityManager?.let {
+//            it.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
+//                override fun onAvailable(network: Network) {
+//                    //take action when network connection is gained
+//                    getTopLevelItems()
+//                }
+//            })
+//        }
 
     }
 
@@ -71,8 +71,8 @@ class MainActivity : AppCompatActivity() {
                     val owner = i.child("owner").value.toString()
                     val completion = i.child("completion").value.toString().toBoolean()
                     val date = i.child("date").value.toString()
-
-                    itemList.add(reminderItem(item, owner, completion, date))
+                    val ttid = i.child("ttid").value.toString()
+                    itemList.add(reminderItem(item, owner, completion, date, ttid))
                 }
                 mAdapter.notifyDataSetChanged()
             }
@@ -92,11 +92,13 @@ class MainActivity : AppCompatActivity() {
         dialogBuilder.setView(dialogView)
         dialogBuilder.setTitle("Add Item")
         val itemNameET = dialogView.findViewById<android.widget.EditText>(R.id.addItemNameET)
+        val ttIdTV = dialogView.findViewById<android.widget.EditText>(R.id.ttIdTV)
         dialogBuilder.setPositiveButton("Add") { dialog, which ->
             val item = itemNameET.text.toString()
+            val ttid = ttIdTV.text.toString()
             val owner = appOwner
             val completion = false
-            addPendingitem(item, owner, completion)
+            addPendingitem(item, owner, completion, ttid)
             Toast.makeText(applicationContext, "Item Added", Toast.LENGTH_LONG).show()
         }
         dialogBuilder.setNegativeButton("Cancel") { dialog, which ->
@@ -106,8 +108,8 @@ class MainActivity : AppCompatActivity() {
         b.show()
     }
 
-    fun addPendingitem(item:String, owner: String, completion: Boolean) {
-        val scram = reminderItem(item, owner, completion, Date().toString())
+    fun addPendingitem(item:String, owner: String, completion: Boolean, ttid: String) {
+        val scram = reminderItem(item, owner, completion, Date().toString(), ttid)
 
         database.child(item).setValue(scram)
             .addOnSuccessListener { Toast.makeText(this, "$item added", Toast.LENGTH_SHORT).show() }
@@ -144,6 +146,7 @@ class MainActivity : AppCompatActivity() {
         val ownerTV = dialogView.findViewById<android.widget.TextView>(R.id.ownerTV)
         val completionTV = dialogView.findViewById<android.widget.TextView>(R.id.completionTV)
         val dateTV = dialogView.findViewById<android.widget.TextView>(R.id.dateTV)
+        val ttidTV = dialogView.findViewById<android.widget.TextView>(R.id.ttIdTV)
 
         Log.i("TAGGER", itm.toString())
 
@@ -157,11 +160,23 @@ class MainActivity : AppCompatActivity() {
             Log.i("TAGGER", "infoDialog: ${itm.completion.toString().toBoolean()}")
         }
         dateTV.setText(itm.date)
+
+        ttidTV.setText(itm.ttid)
         Log.i("TAGGER", "infoDialog: ${itm.date}")
 
         dialogBuilder.setPositiveButton("DISMISS") { dialog, which -> }
         val b = dialogBuilder.create()
         b.show()
+    }
+
+    fun startStreaming(itm: reminderItem): Boolean {
+        val ttId = itm.ttid
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.addCategory(Intent.CATEGORY_BROWSABLE)
+        intent.setDataAndType(Uri.parse("https://www.2embed.to/embed/imdb/movie?id=$ttId"), "text/html")
+        Log.i("TAGGER", "startStreaming: $ttId")
+        startActivity(intent)
+        return true
     }
 
     fun toggleCheck(itemName: String, isChecked: Boolean) {

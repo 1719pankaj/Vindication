@@ -27,6 +27,9 @@
         android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/add_drawable" />
+        app:srcCompat="@drawable/add_drawable"
+        android:focusable="true"
+        android:contentDescription="Add Item fab"
+        tools:ignore="HardcodedText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

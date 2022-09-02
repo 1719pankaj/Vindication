@@ -2,6 +2,7 @@ package com.example.vindication
 
 import android.content.Context
 import android.graphics.Paint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 class ItemListAdapter(
     private val reminderItemSet: ArrayList<reminderItem>,
     private val context: Context
-        ): RecyclerView.Adapter<ItemListAdapter.ViewHolder>() {
+    ): RecyclerView.Adapter<ItemListAdapter.ViewHolder>() {
 
     val mActivity: MainActivity = context as MainActivity
 
@@ -22,6 +23,7 @@ class ItemListAdapter(
         val textView: TextView = view.findViewById(R.id.itemTextView)
         val checkBox: CheckBox = view.findViewById(R.id.itemCheckBox)
         val infoIV: ImageView = view.findViewById(R.id.infoIV)
+        val playIV: ImageView = view.findViewById(R.id.playIV)
         val cardView: CardView = view.findViewById(R.id.cardView)
     }
 
@@ -52,6 +54,17 @@ class ItemListAdapter(
             }
         }
 
+        if (reminderItemSet[position].ttid != "null") {
+            holder.playIV.visibility = View.VISIBLE
+            holder.infoIV.setOnLongClickListener {
+//                Log.i("TAGGER", "playIV clicked")
+                mActivity.startStreaming(reminderItemSet[position])
+            }
+        } else {
+            holder.playIV.visibility = View.GONE
+        }
+
+
         holder.infoIV.setOnClickListener {
             mActivity.infoDialog(reminderItemSet[position])
         }
@@ -60,21 +73,25 @@ class ItemListAdapter(
             holder.cardView.setBackgroundResource(R.drawable.blue_gradient)
             holder.textView.setTextColor(context.resources.getColor(R.color.white))
             holder.infoIV.drawable.setTint(context.resources.getColor(R.color.white))
+            holder.playIV.drawable.setTint(context.resources.getColor(R.color.white))
 
         } else if(reminderItemSet[position].owner == "Pankaj Kumar Roy" && reminderItemSet[position].completion == true){
             holder.cardView.setBackgroundResource(0)
             holder.textView.setTextColor(context.resources.getColor(R.color.apnaBlack))
             holder.infoIV.drawable.setTint(context.resources.getColor(R.color.apnaBlack))
+            holder.playIV.drawable.setTint(context.resources.getColor(R.color.apnaBlack))
 
         } else if(reminderItemSet[position].owner == "ktress" && reminderItemSet[position].completion == false) {
             holder.cardView.setBackgroundResource(R.drawable.pink_gradient)
             holder.textView.setTextColor(context.resources.getColor(R.color.white))
             holder.infoIV.drawable.setTint(context.resources.getColor(R.color.white))
+            holder.playIV.drawable.setTint(context.resources.getColor(R.color.white))
 
         } else if(reminderItemSet[position].owner == "ktress" && reminderItemSet[position].completion == true) {
             holder.cardView.setBackgroundResource(0)
             holder.textView.setTextColor(context.resources.getColor(R.color.apnaBlack))
             holder.infoIV.drawable.setTint(context.resources.getColor(R.color.apnaBlack))
+            holder.playIV.drawable.setTint(context.resources.getColor(R.color.apnaBlack))
         }
 
         holder.textView.setOnLongClickListener { mActivity.removePendingitem(reminderItemSet[position].item.toString()) }
