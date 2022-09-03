@@ -24,13 +24,16 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
+    //TODO Fix the bug were is send an smpty string to Firebase for no specified TTID
+
     private lateinit var database: DatabaseReference
     private lateinit var mAdapter: ItemListAdapter
     var itemList: ArrayList<reminderItem> = ArrayList()
-//    val appOwner: String = "Pankaj Kumar Roy"
-    val appOwner: String = "ktress"
+//    var itemListCpy: ArrayList<reminderItem> = ArrayList()
+    val appOwner: String = "Pankaj Kumar Roy"
+//    val appOwner: String = "ktress"
 
-    @RequiresApi(Build.VERSION_CODES.N)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -40,7 +43,6 @@ class MainActivity : AppCompatActivity() {
         database = Firebase.database("https://vindication-b5dee-default-rtdb.asia-southeast1.firebasedatabase.app").reference
         Firebase.database.setPersistenceEnabled(true)
 
-//        addFab.setOnClickListener { addPendingitem("Tere Naam", "Pankaj Kumar Roy", false) }
         addFab.setOnClickListener { addItemDialog() }
 
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -49,20 +51,10 @@ class MainActivity : AppCompatActivity() {
 //        Log.i("TAG", "onCreate: $itemList")
         recyclerView.adapter = mAdapter
 
-//        val connectivityManager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-//        connectivityManager?.let {
-//            it.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
-//                override fun onAvailable(network: Network) {
-//                    //take action when network connection is gained
-//                    getTopLevelItems()
-//                }
-//            })
-//        }
-
     }
 
     fun getTopLevelItems(): ArrayList<reminderItem> {
-
+        var oldCount = itemList.size
         database.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 itemList.clear()
@@ -74,7 +66,17 @@ class MainActivity : AppCompatActivity() {
                     val ttid = i.child("ttid").value.toString()
                     itemList.add(reminderItem(item, owner, completion, date, ttid))
                 }
-                mAdapter.notifyDataSetChanged()
+//                mAdapter.notifyDataSetChanged()
+                if(itemList.size == oldCount){
+                    Log.i("TAGGER", "CHANGED")
+                    mAdapter.notifyItemChanged(itemList.size)
+                } else if (itemList.size > oldCount) {
+                    Log.i("TAGGER", "INSERTED")
+                    mAdapter.notifyItemInserted(itemList.size)
+                } else if(itemList.size < oldCount){
+                    Log.i("TAGGER", "REMOVED")
+                    mAdapter.notifyItemRemoved(itemList.size-1)
+                }
             }
             override fun onCancelled(error: DatabaseError) {
                 // Failed to read value
@@ -95,11 +97,13 @@ class MainActivity : AppCompatActivity() {
         val ttIdTV = dialogView.findViewById<android.widget.EditText>(R.id.ttIdTV)
         dialogBuilder.setPositiveButton("Add") { dialog, which ->
             val item = itemNameET.text.toString()
-            val ttid = ttIdTV.text.toString()
             val owner = appOwner
             val completion = false
-            addPendingitem(item, owner, completion, ttid)
-            Toast.makeText(applicationContext, "Item Added", Toast.LENGTH_LONG).show()
+            val ttid = if(ttIdTV.text.toString() == "") "null" else ttIdTV.text.toString()
+
+            val scram: reminderItem = reminderItem(item, owner, completion, Date().toString(), ttid)
+            addPendingitem(scram)
+            Toast.makeText(applicationContext, "Item Added $", Toast.LENGTH_LONG).show()
         }
         dialogBuilder.setNegativeButton("Cancel") { dialog, which ->
             Toast.makeText(applicationContext, "Cancelled", Toast.LENGTH_LONG).show()
@@ -108,11 +112,11 @@ class MainActivity : AppCompatActivity() {
         b.show()
     }
 
-    fun addPendingitem(item:String, owner: String, completion: Boolean, ttid: String) {
-        val scram = reminderItem(item, owner, completion, Date().toString(), ttid)
-
-        database.child(item).setValue(scram)
-            .addOnSuccessListener { Toast.makeText(this, "$item added", Toast.LENGTH_SHORT).show() }
+    fun addPendingitem(scram: reminderItem) {
+        scram.item?.let {
+            database.child(it).setValue(scram)
+                .addOnSuccessListener { Toast.makeText(this, "$it added", Toast.LENGTH_SHORT).show() }
+        }
     }
 
     fun removePendingitem(item:String): Boolean {
@@ -180,6 +184,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun toggleCheck(itemName: String, isChecked: Boolean) {
+    Log.i("TAGGER", "toggleCheck: $itemName")
         if(isChecked) {
             database.child(itemName).child("completion").setValue(true)
         }
