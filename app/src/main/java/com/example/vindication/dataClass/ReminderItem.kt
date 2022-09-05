@@ -1,4 +1,4 @@
-package com.example.vindication
+package com.example.vindication.dataClass
 
 import com.google.firebase.database.IgnoreExtraProperties
 

@@ -1,8 +1,7 @@
-package com.example.vindication
+package com.example.vindication.adapters
 
 import android.content.Context
 import android.graphics.Paint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,13 +10,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.vindication.R
+import com.example.vindication.dataClass.reminderItem
+import com.example.vindication.fragments.FragmentMain
 
 class ItemListAdapter(
     private val reminderItemSet: ArrayList<reminderItem>,
-    private val context: Context
+    private val context: FragmentMain
     ): RecyclerView.Adapter<ItemListAdapter.ViewHolder>() {
 
-    val mActivity: MainActivity = context as MainActivity
+    val mActivity: FragmentMain =  context
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.itemTextView)
@@ -47,11 +49,7 @@ class ItemListAdapter(
             text = itemText}
 
         holder.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
-                mActivity.toggleCheck(reminderItemSet[position].item.toString(), true)
-            } else {
-                mActivity.toggleCheck(reminderItemSet[position].item.toString(), false)
-            }
+            mActivity.toggleCheck(reminderItemSet[position].item.toString(), isChecked)
         }
 
         if (reminderItemSet[position].ttid != "null") {
@@ -94,7 +92,9 @@ class ItemListAdapter(
             holder.playIV.drawable.setTint(context.resources.getColor(R.color.apnaBlack))
         }
 
-        holder.textView.setOnLongClickListener { mActivity.removePendingitem(reminderItemSet[position].item.toString()) }
+        holder.textView.setOnLongClickListener {
+            mActivity.removePendingitem(reminderItemSet[position].item.toString())
+        }
     }
 
     override fun getItemCount() = reminderItemSet.size
