@@ -37,6 +37,7 @@ class FragmentMain : Fragment() {
 
 
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_main, container, false)
 
@@ -86,13 +87,16 @@ class FragmentMain : Fragment() {
         val ttIdTV = dialogView.findViewById<android.widget.EditText>(R.id.ttIdTVfrag)
         dialogBuilder.setPositiveButton("Add") { dialog, which ->
             val item = itemNameET.text.toString()
-            val owner = appOwner
-            val completion = false
-            val ttid = if(ttIdTV.text.toString() == "") "null" else ttIdTV.text.toString()
+            if (item  != "") {
+                val owner = appOwner
+                val completion = false
+                val ttid = if (ttIdTV.text.toString() == "") "null" else ttIdTV.text.toString()
 
-            val scram: reminderItem = reminderItem(item, owner, completion, Date().toString(), ttid)
-            addPendingitem(scram)
-            Toast.makeText(context, "Item Added $", Toast.LENGTH_LONG).show()
+                val scram: reminderItem =
+                    reminderItem(item, owner, completion, Date().toString(), ttid)
+                addPendingitem(scram)
+                Toast.makeText(context, "Item Added $", Toast.LENGTH_LONG).show()
+            }
         }
         dialogBuilder.setNegativeButton("Cancel") { dialog, which ->
             Toast.makeText(context, "Cancelled", Toast.LENGTH_LONG).show()
