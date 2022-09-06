@@ -20,51 +20,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/infoIV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/info_drawable"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/playIV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:clickable="true"
-            android:src="@drawable/play_circle"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/infoIV"
-            app:layout_constraintTop_toTopOf="parent"
-            android:focusable="true" />
-
 
         <TextView
             android:id="@+id/itemTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="16dp"
+            android:layout_margin="16dp"
             android:fontFamily="@font/gilroy_font"
             android:text="TextView"
             android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/itemCheckBox"
-            app:layout_constraintEnd_toStartOf="@+id/infoIV"
-            app:layout_constraintStart_toEndOf="@+id/itemCheckBox"
-            app:layout_constraintTop_toTopOf="@+id/itemCheckBox" />
-
-        <CheckBox
-            android:id="@+id/itemCheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
+
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/playableIV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/play_circle" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

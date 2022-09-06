@@ -1,5 +1,6 @@
 package com.example.vindication.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Paint
 import android.view.LayoutInflater
@@ -9,10 +10,15 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vindication.R
 import com.example.vindication.dataClass.reminderItem
 import com.example.vindication.fragments.FragmentMain
+import com.example.vindication.fragments.FragmentMainDirections
 
 class ItemListAdapter(
     private val reminderItemSet: ArrayList<reminderItem>,
@@ -23,9 +29,7 @@ class ItemListAdapter(
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.itemTextView)
-        val checkBox: CheckBox = view.findViewById(R.id.itemCheckBox)
-        val infoIV: ImageView = view.findViewById(R.id.infoIV)
-        val playIV: ImageView = view.findViewById(R.id.playIV)
+        val playableIV: ImageView = view.findViewById(R.id.playableIV)
         val cardView: CardView = view.findViewById(R.id.cardView)
     }
 
@@ -36,60 +40,43 @@ class ItemListAdapter(
         return ViewHolder(view)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val itemText = reminderItemSet[position].item.toString()
-
-        holder.checkBox.isChecked = reminderItemSet[position].completion == true
-
-        if(holder.checkBox.isChecked){
-            holder.textView.apply{paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-            text = itemText}
-        } else
-            holder.textView.apply{paintFlags = paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-            text = itemText}
-
-        holder.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
-            mActivity.toggleCheck(reminderItemSet[position].item.toString(), isChecked)
+        holder.textView.text = "<generic>  |  $itemText"
+        holder.textView.setOnClickListener {
+            val action = FragmentMainDirections.actionFragmentMainToFragmentItem(reminderItemSet[position])
+            mActivity.navigateToItemFrag(action)
         }
 
-        if (reminderItemSet[position].ttid != "null") {
-            holder.playIV.visibility = View.VISIBLE
-            holder.infoIV.setOnLongClickListener {
-//                Log.i("TAGGER", "playIV clicked")
-                mActivity.startStreaming(reminderItemSet[position])
-            }
+        if(reminderItemSet[position].ttid != "null"){
+            holder.playableIV.visibility = View.VISIBLE
         } else {
-            holder.playIV.visibility = View.GONE
-        }
-
-
-        holder.infoIV.setOnClickListener {
-            mActivity.infoDialog(reminderItemSet[position])
+            holder.playableIV.visibility = View.GONE
         }
 
         if(reminderItemSet[position].owner == "Pankaj Kumar Roy" && reminderItemSet[position].completion == false){
             holder.cardView.setBackgroundResource(R.drawable.blue_gradient)
             holder.textView.setTextColor(context.resources.getColor(R.color.white))
-            holder.infoIV.drawable.setTint(context.resources.getColor(R.color.white))
-            holder.playIV.drawable.setTint(context.resources.getColor(R.color.white))
+            holder.playableIV.setColorFilter(context.resources.getColor(R.color.white))
 
         } else if(reminderItemSet[position].owner == "Pankaj Kumar Roy" && reminderItemSet[position].completion == true){
             holder.cardView.setBackgroundResource(0)
             holder.textView.setTextColor(context.resources.getColor(R.color.apnaBlack))
-            holder.infoIV.drawable.setTint(context.resources.getColor(R.color.apnaBlack))
-            holder.playIV.drawable.setTint(context.resources.getColor(R.color.apnaBlack))
+            holder.textView.paintFlags = holder.textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            holder.playableIV.setColorFilter(context.resources.getColor(R.color.apnaBlack))
+
 
         } else if(reminderItemSet[position].owner == "ktress" && reminderItemSet[position].completion == false) {
             holder.cardView.setBackgroundResource(R.drawable.pink_gradient)
             holder.textView.setTextColor(context.resources.getColor(R.color.white))
-            holder.infoIV.drawable.setTint(context.resources.getColor(R.color.white))
-            holder.playIV.drawable.setTint(context.resources.getColor(R.color.white))
+            holder.playableIV.setColorFilter(context.resources.getColor(R.color.white))
 
         } else if(reminderItemSet[position].owner == "ktress" && reminderItemSet[position].completion == true) {
             holder.cardView.setBackgroundResource(0)
             holder.textView.setTextColor(context.resources.getColor(R.color.apnaBlack))
-            holder.infoIV.drawable.setTint(context.resources.getColor(R.color.apnaBlack))
-            holder.playIV.drawable.setTint(context.resources.getColor(R.color.apnaBlack))
+            holder.textView.paintFlags = holder.textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            holder.playableIV.setColorFilter(context.resources.getColor(R.color.apnaBlack))
         }
 
         holder.textView.setOnLongClickListener {

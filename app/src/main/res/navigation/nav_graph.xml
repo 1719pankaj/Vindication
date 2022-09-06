@@ -9,5 +9,25 @@
         android:id="@+id/fragmentMain"
         android:name="com.example.vindication.fragments.FragmentMain"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_fragmentMain_to_fragmentItem"
+            app:destination="@id/fragmentItem" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/fragmentItem"
+        android:name="com.example.vindication.fragments.FragmentItem"
+        android:label="fragment_item"
+        tools:layout="@layout/fragment_item" >
+        <action
+            android:id="@+id/action_fragmentItem_to_fragmentMain"
+            app:destination="@id/fragmentMain"
+            app:popUpTo="@id/fragmentItem"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="reminderItemParcel"
+            app:argType="com.example.vindication.dataClass.reminderItem" />
+    </fragment>
 </navigation>

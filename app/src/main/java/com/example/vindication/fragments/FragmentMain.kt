@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.navigation.NavDirections
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vindication.R
 import com.example.vindication.adapters.ItemListAdapter
@@ -81,7 +83,7 @@ class FragmentMain : Fragment() {
         dialogBuilder.setView(dialogView)
         dialogBuilder.setTitle("Add Item")
         val itemNameET = dialogView.findViewById<android.widget.EditText>(R.id.addItemNameET)
-        val ttIdTV = dialogView.findViewById<android.widget.EditText>(R.id.ttIdTV)
+        val ttIdTV = dialogView.findViewById<android.widget.EditText>(R.id.ttIdTVfrag)
         dialogBuilder.setPositiveButton("Add") { dialog, which ->
             val item = itemNameET.text.toString()
             val owner = appOwner
@@ -127,52 +129,9 @@ class FragmentMain : Fragment() {
         return res
     }
 
-    fun infoDialog(itm: reminderItem) {
-        val dialogBuilder = AlertDialog.Builder(requireContext())
-        val inflater = this.layoutInflater
-        val dialogView = inflater.inflate(R.layout.info_dialog, null)
-        dialogBuilder.setView(dialogView)
-        dialogBuilder.setTitle("info")
-        val itemTV = dialogView.findViewById<android.widget.TextView>(R.id.itemTV)
-        val ownerTV = dialogView.findViewById<android.widget.TextView>(R.id.ownerTV)
-        val completionTV = dialogView.findViewById<android.widget.TextView>(R.id.completionTV)
-        val dateTV = dialogView.findViewById<android.widget.TextView>(R.id.dateTV)
-        val ttidTV = dialogView.findViewById<android.widget.TextView>(R.id.ttIdTV)
 
-        Log.i("TAGGER", itm.toString())
-
-        itemTV.setText(itm.item)
-        //If I remove these👇👇 Underscores, it stops showing the status and date, I hove no idea why and I can't be arsed to fix it.
-        ownerTV.setText(if(itm.owner == appOwner) "Owner - You__" else "Owner - Not You")
-        if(itm.completion.toString().toBoolean())
-            completionTV.setText("Status - Done")
-        else {
-            completionTV.setText("Status - Pending")
-            Log.i("TAGGER", "infoDialog: ${itm.completion.toString().toBoolean()}")
-        }
-        dateTV.setText(itm.date)
-
-        ttidTV.setText(itm.ttid)
-        Log.i("TAGGER", "infoDialog: ${itm.date}")
-
-        dialogBuilder.setPositiveButton("DISMISS") { dialog, which -> }
-        val b = dialogBuilder.create()
-        b.show()
-    }
-
-    fun startStreaming(itm: reminderItem): Boolean {
-        val ttId = itm.ttid
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.addCategory(Intent.CATEGORY_BROWSABLE)
-        intent.setDataAndType(Uri.parse("https://www.2embed.to/embed/imdb/movie?id=$ttId"), "text/html")
-        Log.i("TAGGER", "startStreaming: $ttId")
-        startActivity(intent)
-        return true
-    }
-
-    fun toggleCheck(itemName: String, isChecked: Boolean) {
-        Log.i("TAGGER", "toggleCheck: $itemName to $isChecked")
-        database.child(itemName).child("completion").setValue(isChecked)
+    fun navigateToItemFrag(action: NavDirections) {
+        view?.let { Navigation.findNavController(it).navigate(action) }
     }
 
 

@@ -6,8 +6,8 @@
         android:angle="180" />
 
     <corners
-        android:radius="10dp">
-    </corners>
-</shape>
+        android:radius="10dp"/>
 
+
+</shape>
 

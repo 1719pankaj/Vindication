@@ -12,55 +12,55 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/ownerTV"
+        app:layout_constraintBottom_toTopOf="@+id/ownerTVfrag"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
     <TextView
-        android:id="@+id/ownerTV"
+        android:id="@+id/ownerTVfrag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/completionTV"
+        app:layout_constraintBottom_toTopOf="@+id/completionTVfrag"
         app:layout_constraintEnd_toEndOf="@+id/itemTV"
         app:layout_constraintStart_toStartOf="@+id/itemTV"
         app:layout_constraintTop_toBottomOf="@+id/itemTV" />
 
     <TextView
-        android:id="@+id/completionTV"
+        android:id="@+id/completionTVfrag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/dateTV"
-        app:layout_constraintEnd_toEndOf="@+id/ownerTV"
-        app:layout_constraintStart_toStartOf="@+id/ownerTV"
-        app:layout_constraintTop_toBottomOf="@+id/ownerTV" />
+        app:layout_constraintBottom_toTopOf="@+id/dateTVfrag"
+        app:layout_constraintEnd_toEndOf="@+id/ownerTVfrag"
+        app:layout_constraintStart_toStartOf="@+id/ownerTVfrag"
+        app:layout_constraintTop_toBottomOf="@+id/ownerTVfrag" />
 
     <TextView
-        android:id="@+id/dateTV"
+        android:id="@+id/dateTVfrag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/ttIdTV"
-        app:layout_constraintEnd_toEndOf="@+id/completionTV"
-        app:layout_constraintStart_toStartOf="@+id/completionTV"
-        app:layout_constraintTop_toBottomOf="@+id/completionTV" />
+        app:layout_constraintBottom_toTopOf="@+id/ttIdTVfrag"
+        app:layout_constraintEnd_toEndOf="@+id/completionTVfrag"
+        app:layout_constraintStart_toStartOf="@+id/completionTVfrag"
+        app:layout_constraintTop_toBottomOf="@+id/completionTVfrag" />
 
     <TextView
-        android:id="@+id/ttIdTV"
+        android:id="@+id/ttIdTVfrag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/dateTV"
-        app:layout_constraintStart_toStartOf="@+id/dateTV"
-        app:layout_constraintTop_toBottomOf="@+id/dateTV" />
+        app:layout_constraintEnd_toEndOf="@+id/dateTVfrag"
+        app:layout_constraintStart_toStartOf="@+id/dateTVfrag"
+        app:layout_constraintTop_toBottomOf="@+id/dateTVfrag" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
